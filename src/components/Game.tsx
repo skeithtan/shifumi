@@ -48,6 +48,7 @@ export function Game() {
   const [opponentSymbol, setOpponentSymbol] = useState<ShifumiSymbol | undefined>(undefined);
   const [opponentScore, setOpponentScore] = useState(0);
   const [playerScore, setPlayerScore] = useState(0);
+  const [highlightedPlayer, setHighlightedPlayer] = useState<string | undefined>(undefined);
   const showScores = opponentScore > 0 || playerScore > 0;
 
   function handleSelectSymbol(newPlayerSymbol: ShifumiSymbol) {
@@ -61,15 +62,18 @@ export function Game() {
     switch (outcome) {
       case ShifumiOutcome.PlayerWin:
         setPlayerScore((value) => value + 1);
+        setHighlightedPlayer("Player");
         return;
       case ShifumiOutcome.OpponentWin:
         setOpponentScore((value) => value + 1);
+        setHighlightedPlayer("Opponent");
     }
   }
 
   function handleContinue() {
     setPlayerSymbol(undefined);
     setOpponentSymbol(undefined);
+    setHighlightedPlayer(undefined);
   }
 
   function handleReset() {
@@ -95,8 +99,8 @@ export function Game() {
           display: "flex",
           gap: 16,
         }}>
-          <ScoreDisplay playerName="Player" score={playerScore}/>
-          <ScoreDisplay playerName="Opponent" score={opponentScore}/>
+          <ScoreDisplay playerName="Player" score={playerScore} highlighted={highlightedPlayer === "Player"}/>
+          <ScoreDisplay playerName="Opponent" score={opponentScore} highlighted={highlightedPlayer === "Opponent"}/>
         </div>
       )}
       {!playerSymbol && <SymbolChoice handleSelectSymbol={handleSelectSymbol}/>}
